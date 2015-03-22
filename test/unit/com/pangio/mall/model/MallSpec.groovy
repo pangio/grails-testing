@@ -14,17 +14,20 @@ import spock.lang.Specification
 @TestFor(Mall)
 class MallSpec extends Specification {
 
+    def mall
+
     def setup() {
+        mall = new Mall()
+        mall.name = 'Great mall'
+        mall.address = '44 Parnell St, Dublin 1'
     }
 
     def cleanup() {
+        mall = null
     }
 
     void 'Test Mall constraints'() {
         when: 'Mall is created with name and address'
-        def mall = new Mall()
-        mall.name = 'Some Mall'
-        mall.address = 'Some address'
 
         then: 'validation succeeds'
         mall.validate()
@@ -42,9 +45,6 @@ class MallSpec extends Specification {
     void 'Test the Stores quantity'() {
 
         when: 'Mall is created'
-        def mall = new Mall()
-        mall.name = 'Some Mall'
-        mall.address = '44 Parnell St, Dublin 1'
 
         then: "Store's size is 0"
         assertEquals 0, mall.stores.size()
@@ -70,13 +70,10 @@ class MallSpec extends Specification {
     void 'Test Mall attributes'() {
 
         when: 'attributes are set'
-        def mall = new Mall()
-        mall.name = 'Some mall'
-        mall.address = '44 Parnell St, Dublin 1'
 
         then: "the attributes have expected values"
-        assert mall.name, 'Some mall'
-        assert mall.address, '44 Parnell St, Dublin 1'
+        assertEquals mall.name, 'Great mall'
+        assertEquals mall.address, '44 Parnell St, Dublin 1'
 
         mall.validate()
         !mall.hasErrors()
@@ -84,9 +81,8 @@ class MallSpec extends Specification {
         when: 'the Name is set'
         mall.name = 'SOMETHING'
 
-        then: "toString() should return the same"
-        assert mall.toString(), 'SOMETHING'
-        assert mall.toString(), mall.name
+        then: "the model is updated"
+        assertEquals mall.name, 'SOMETHING'
 
         mall.validate()
         !mall.hasErrors()

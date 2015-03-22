@@ -17,19 +17,22 @@ import spock.lang.Specification
 @Mock([Employee])
 class StoreSpec extends Specification {
 
+    def store
+
     def setup() {
+        store = new Store()
+        store.name = 'Some Store'
+        store.type = Type.SHOES
+        store.mall = new Mall()
     }
 
     def cleanup() {
+        store = null
     }
 
     void 'Test the Store constraints'() {
 
         when: 'a Store is created with name and type'
-        def store = new Store()
-        store.name = 'Some Store'
-        store.type = Type.SHOES
-        store.mall = new Mall()
 
         then: 'validation succeeds'
         store.validate()
@@ -55,10 +58,6 @@ class StoreSpec extends Specification {
     void 'Test the Employees quantity'() {
 
         when: 'a Store is created'
-        def store = new Store()
-        store.name = 'Some Store'
-        store.type = Type.SHOES
-        store.mall = new Mall()
 
         then: "Employee's size is 0"
         assertEquals 0, store.employees.size()
@@ -85,16 +84,11 @@ class StoreSpec extends Specification {
     void 'Test Store attributes'() {
 
         when: 'attributes are set'
-        def store = new Store()
-        store.name = 'Some Store'
-        store.type = Type.SHOES
-        store.mall = new Mall()
 
         then: "the attributes have expected values"
         assertEquals 0, store.employees.size()
-        assert store.name, 'Some Store'
-        assert store.toString(), 'Some Store'
-        assert store.type, Type.SHOES
+        assertEquals store.name, 'Some Store'
+        assertEquals store.type, Type.SHOES
 
         store.validate()
         !store.hasErrors()
@@ -102,9 +96,8 @@ class StoreSpec extends Specification {
         when: 'the Name is set'
         store.name = 'SOMETHING'
 
-        then: "toString() should return the same"
-        assert store.toString(), 'SOMETHING'
-        assert store.toString(), store.name
+        then: "the model is updated"
+        assertEquals store.name, 'SOMETHING'
 
         store.validate()
         !store.hasErrors()

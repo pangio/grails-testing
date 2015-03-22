@@ -12,18 +12,21 @@ import spock.lang.Specification
 @TestFor(Employee)
 class EmployeeSpec extends Specification {
 
+    def employee
+
     def setup() {
+        employee = new Employee()
+        employee.name = 'John'
+        employee.lastName = 'Doe'
+        employee.personalId = "IOSO4FKDO"
     }
 
     def cleanup() {
+        employee = null
     }
 
     void 'Test Employee constraints'() {
         when: 'Employee is created with name and address'
-        def employee = new Employee()
-        employee.name = 'John'
-        employee.lastName = 'Doe'
-        employee.personalId = "IOSO4FKDO"
 
         then: 'validation succeeds'
         employee.validate()
